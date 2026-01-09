@@ -1,6 +1,8 @@
 import asyncio
 import logging
 import os
+import json
+from datetime import datetime
 from typing import List, Optional, Union
 
 import json5
@@ -505,6 +507,26 @@ class CortexRuntime:
             if output is None:
                 logging.debug("No output from LLM")
                 return
+                # --- START: Save Chat History (Issue #985) ---
+            try:
+                log_dir = os.path.join(os.getcwd(), "chat_logs")
+                os.makedirs(log_dir, exist_ok=True)
+                
+                log_entry = {
+                    "tick": tick_num,
+                    "timestamp": datetime.now().isoformat(),
+                    "prompt": str(prompt),
+                    "ai_response": str(output)
+                }
+                
+                log_file = os.path.join(log_dir, "history.jsonl")
+                with open(log_file, "a", encoding="utf-8") as f:
+                    f.write(json.dumps(log_entry, ensure_ascii=False) + "\n")
+                
+                logging.info(f"Chat history saved for tick #{tick_num}")
+            except Exception as e:
+                logging.error(f"Failed to save chat history: {e}")
+            # --- END: Save Chat History ---
 
             # Trigger the simulators
             await self.simulator_orchestrator.promise(output.actions)
