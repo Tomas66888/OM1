@@ -37,3 +37,12 @@ You can provide test sentences to speak by adding the `MockInput` to the config 
 ```
 
 Then connect to the `ws` (`wscat -c ws://localhost:8765`) and type in the words you want the system to speak. This is useful to debug audio out issues and related settings such as chunk values.
+
+### Chinese Language Support (ASR/TTS)
+
+For users requiring Chinese language processing, OM1 supports multilingual models via cloud endpoints. To enable Chinese ASR (Automatic Speech Recognition) or TTS (Text-to-Speech), consider the following:
+
+- **Model Selection**: Use models with strong Chinese capabilities such as **DeepSeek-V3** or **OpenAI Whisper**.
+- **Configuration**: Ensure your configuration file specifies the correct model and language locale (e.g., `zh-CN`) within your specific provider settings.
+
+This helps the system better understand and generate natural-sounding Mandarin Chinese.
